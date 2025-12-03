@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        img:not(.flag-btn) {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+            margin-bottom: 30px;
+            background: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .text-box {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 30px 50px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1)
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .scroll-indicator .arrow {
+            font-size: 1.5rem;
+            color: white;
+            font-family: 'Roboto Mono', monospace;
+            opacity: 0.3;
+            animation: arrowBlink 1.5s infinite;
+        }
+
+        .scroll-indicator .arrow:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .scroll-indicator .arrow:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .scroll-indicator .arrow:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes arrowBlink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .content {
+            background: rgb(0, 0, 0, 0.85);
+            padding: 80px 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #33ff00;
+            box-shadow: 0 0 20px rgba(51, 255, 0, 0.3);
+        }
+
+        .content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .flag-btn {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .flag-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .flag-btn.active {
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: grey;
+            margin-bottom: 20px;
+            border-bottom: 3px solid gray;
+            padding-bottom: 10px;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .project-card {
+            background: black;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card h3 {
+            color: #33ff00;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .contact {
+            text-align: center;
+            padding: 40px;
+            background: black;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .contact a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: opacity 0.3s;
+        }
+
+        .contact a:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<!--<script>
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.addEventListener('keydown', function (e) {
+        if (e.keyCode == 123 ||
+            (e.ctrlKey && e.shiftKey && e.keyCode == 73) ||
+            (e.ctrlKey && e.shiftKey && e.keyCode == 74) ||
+            (e.ctrlKey && e.keyCode == 85)) {
+            e.preventDefault();
+        }
+    });
+</script>-->
+
+<body>
+    <div class="hero">
+        <img src="your-image.jpg" alt="Profile Picture" class="profile-pic">
+        <div class="text-box">
+            <h1><span id="type_text" data-lang-en="Vincent" data-lang-fr="Vincent"></span></h1>
+            <p data-lang-en="Cybersecurity | Linux | server creator"
+                data-lang-fr="Cybersécurité | Linux | créateur de serveurs">
+                Cybersecurity | Linux | server creator
+            </p>
+        </div>
+        <div class="scroll-indicator">
+            <div class="arrow">v</div>
+            <div class="arrow">v</div>
+            <div class="arrow">v</div>
+        </div>
+    </div>
+    <div class="language-switcher">
+        <img src="royaume-uni.png" alt="English" class="flag-btn active" onclick="switchLanguage('en')" id="flag-en">
+        <img src="france.png" alt="French" class="flag-btn" onclick="switchLanguage('fr')" id="flag-fr">
+    </div>
+    <div class="content">
+        <div class="container" id="intro">
+            <div class="section">
+                <h2 data-lang-en="About Me" data-lang-fr="À Propos de Moi">About Me</h2>
+                <p data-lang-en="Hey there! I'm a passionate developer who loves creating beautiful and functional websites. I enjoy turning ideas into reality through clean code and thoughtful design."
+                    data-lang-fr="Salut! Je suis un développeur passionné qui aime créer des sites Web beaux et fonctionnels. J'aime transformer les idées en réalité grâce à un code propre.">
+                    Hey there! I'm a passionate developer who loves creating beautiful and functional websites. I enjoy
+                    turning ideas into reality through clean code and thoughtful design.
+                </p>
+
+                <p data-lang-en="With experience in modern web technologies, I specialize in building responsive and user-friendly applications that make a difference."
+                    data-lang-fr="Avec une expérience des technologies Web modernes, je me spécialise dans la création d'applications qui font la différence.">
+                    With experience in modern web technologies, I specialize in building responsive and user-friendly
+                    applications that make a difference.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2 data-lang-en="Skills" data-lang-fr="Compétences">Skills</h2>
+                <div class="skills">
+                    <div class="skill-card">
+                        <h3>Frontend</h3>
+                        <p>HTML, CSS, JavaScript</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Backend</h3>
+                        <p>Node.js, Python</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Design</h3>
+                        <p>UI/UX, Figma</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Tools</h3>
+                        <p>Git, VS Code</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 data-lang-en="Projects" data-lang-fr="Projets">projects</h2>
+                <div class="projects">
+                    <div class="project-card">
+                        <h3 data-lang-en="Home Server with Raspberry Pi 4"
+                            data-lang-fr="Serveur Personnel avec Raspberry Pi 4">
+                            Home Server with Raspberry Pi 4
+                        </h3>
+                        <p data-lang-en="Built a secure home server using a Raspberry Pi 4 with 1TB storage, accessible remotely via VPN. Configured for personal cloud storage with encrypted access and automated backups."
+                            data-lang-fr="Construction d'un serveur personnel sécurisé avec Raspberry Pi 4 et stockage de 1To, accessible à distance via VPN. Configuré pour stockage cloud personnel avec accès chiffré et sauvegardes automatiques.">
+                            Built a secure home server using a Raspberry Pi 4 with 1TB storage, accessible remotely via
+                            VPN. Configured for personal cloud storage with encrypted access and automated backups.
+                        </p>
+                    </div>
+                    <div class="project-card">
+                        <h3 data-lang-en="Custom Weather Application" data-lang-fr="Application Météo Personnalisée">
+                            Custom Weather Application</h3>
+                        <p data-lang-en="Developed a weather application with real-time data integration, featuring location-based forecasts and an intuitive user interface."
+                            data-lang-fr="Développement d'une application météo avec intégration de données en temps réel, prévisions géolocalisées et interface utilisateur intuitive.">
+                            Developed a weather application with real-time data integration, featuring location-based
+                            forecasts and an intuitive user interface.</p>
+                    </div>
+                    <div class="project-card">
+                        <h3 data-lang-en="Custom Search Engine" data-lang-fr="Moteur de Recherche Personnalisé">
+                            Custom Search Engine</h3>
+                        <p data-lang-en="Created a custom search engine with tailored algorithms and filtering options, optimized for specific research needs and enhanced privacy."
+                            data-lang-fr="Création d'un moteur de recherche personnalisé avec algorithmes adaptés et options de filtrage, optimisé pour des besoins de recherche spécifiques et confidentialité renforcée.">
+                            Created a custom search engine with tailored algorithms and filtering options, optimized for
+                            specific research needs and enhanced privacy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="contact">
+                    <h2 style="color: white; border: none;" data-lang-en="Get In Touch" data-lang-fr="Me Contacter">Get
+                        In Touch</h2>
+                    <p style="color: white; margin: 20px 0;"
+                        data-lang-en="Feel free to reach out for collaborations or just a friendly chat!"
+                        data-lang-fr="Contactez-moi pour des collaborations ou juste pour échanger !">Feel free to reach
+                        out for collaborations or just a
+                        friendly chat!</p>
+                    <a href="mailto:vincentahrance@protonmail.com">Email</a>
+                    <a href="https://github.com/vince456-ui">GitHub</a>
+                    <a href="https://www.linkedin.com/in/vincent-abdelhamid-rance-b85330388/">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        observer.observe(document.getElementById('intro'));
+    </script>
+    <script>
+        let typed = null;
+
+        function initTyping() {
+            if (typed) {
+                typed.destroy();
+            }
+
+            typed = new Typed("#type_text", {
+                strings: ["Vincent"],
+                typeSpeed: 100,
+                backSpeed: 50,
+                loop: false,
+                showCursor: true,
+                cursorChar: '_',
+                onComplete: function (self) {
+                    self.cursor.style.display = 'none';
+                }
+            });
+        }
+
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    initTyping();
+                }
+            });
+        }, {
+            threshold: 0.5
+        });
+
+        const heroSection = document.querySelector('.hero');
+        heroObserver.observe(heroSection);
+    </script>
+    <script>
+        let currentLang = 'en';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+
+            document.querySelectorAll('.flag-btn').forEach(flag => {
+                flag.classList.remove('active');
+            });
+            document.getElementById('flag-' + lang).classList.add('active');
+
+            document.querySelectorAll('[data-lang-en]').forEach(element => {
+                const text = element.getAttribute('data-lang-' + lang);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        }
+    </script>
+    <!--<script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode == 123) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+        });-->
+
+    setInterval(function () {
+    if (window.outerWidth - window.innerWidth > 160 ||
+    window.outerHeight - window.innerHeight > 160) {
+    document.body.innerHTML = "Developer tools detected!";
+    }
+    }, 1000);
+    </script>
+</body>
+
+</html>
