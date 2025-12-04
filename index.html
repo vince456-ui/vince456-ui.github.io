@@ -13,7 +13,18 @@
             box-sizing: border-box;
         }
 
-        img:not(.flag-btn) {
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: #33ff00;
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        .img:not(.flag-btn) {
             pointer-events: none;
             -webkit-user-drag: none;
             user-select: none;
@@ -301,6 +312,7 @@
 </script>-->
 
 <body>
+    <div class="scroll-progress"></div>
     <div class="hero">
         <img src="your-image.jpg" alt="Profile Picture" class="profile-pic">
         <div class="text-box">
@@ -426,6 +438,14 @@
         });
 
         observer.observe(document.getElementById('intro'));
+    </script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+            document.querySelector('.scroll-progress').style.width = scrollPercentage + '%';
+        });
     </script>
     <script>
         let typed = null;
